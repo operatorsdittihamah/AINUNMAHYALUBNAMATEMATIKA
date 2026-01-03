@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Kuis UAS Matematika Kelas 4</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#0b3d2e;
+    color:white;
+    margin:0;
+    padding:20px;
+}
+
+/* JUDUL */
+h1{
+    text-align:center;
+    font-size:42px;
+}
+
+/* GAMBAR ATAS */
+.top-image{
+    display:flex;
+    justify-content:center;
+    margin-bottom:15px;
+}
+.top-image img{
+    width:160px;
+    border-radius:50%;
+    box-shadow:0 0 20px rgba(0,255,150,0.9);
+}
+
+/* BOX */
+.quiz-box{
+    max-width:1100px;
+    margin:auto;
+    background:#145a32;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(0,255,150,0.7);
+}
+
+/* SOAL */
+.question{
+    font-size:36px;
+    margin-bottom:25px;
+}
+
+/* PILIHAN */
+.option{
+    background:#1e8449;
+    padding:18px;
+    margin:14px 0;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:30px;
+}
+.option:hover{background:#27ae60}
+
+.correct{background:#2ecc71 !important}
+.wrong{background:#e74c3c !important}
+
+/* TOMBOL */
+button{
+    padding:15px 30px;
+    font-size:26px;
+    margin-top:20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#f1c40f;
+    font-weight:bold;
+}
+
+/* KUNCI JAWABAN */
+.answer-key{
+    background:#1b4f72;
+    margin-top:25px;
+    padding:20px;
+    border-radius:15px;
+    font-size:22px;
+}
+.kunci-benar{
+    color:#2ecc71;
+    font-weight:bold;
+}
+.kunci-salah{
+    color:#ff7675;
+}
+
+/* FULLSCREEN */
+.fullscreen-btn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    z-index:999;
+    background:#00e676;
+    color:black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-image">
+    <img src="ainun.png" alt="Logo">
+</div>
+
+<h1>🎯 Mari Bermain Bersama Ainun  
+<br>Kuis UAS Matematika Kelas 4 SD</h1>
+
+<div class="quiz-box" id="quizBox"></div>
+
+<button class="fullscreen-btn" onclick="fullscreen()">🖥️ MODE PROYEKTOR</button>
+
+<!-- AUDIO -->
+<audio id="benar"><source src="benar.mp3"></audio>
+<audio id="salah"><source src="salah.mp3"></audio>
+
+<script>
+const quizData = [
+{q:"456 + 289 = ?", a:["635","645","745","755"], c:2},
+{q:"800 - 375 = ?", a:["425","435","445","455"], c:0},
+{q:"24 × 6 = ?", a:["124","134","144","154"], c:2},
+{q:"96 ÷ 8 = ?", a:["10","11","12","13"], c:2},
+{q:"Pecahan senilai 2/4 adalah …", a:["1/4","1/2","3/4","4/2"], c:1},
+{q:"6/12 disederhanakan menjadi …", a:["1/6","1/4","1/3","1/2"], c:3},
+{q:"3/4 + 1/4 = …", a:["1/2","3/4","1","2"], c:2},
+{q:"Bangun dengan 4 sisi sama panjang & siku-siku?", a:["Persegi panjang","Jajar genjang","Persegi","Trapesium"], c:2},
+{q:"Keliling persegi sisi 8 cm adalah …", a:["24","32","48","64"], c:1},
+{q:"Jumlah rusuk kubus adalah …", a:["6","8","10","12"], c:3},
+
+{q:"125 × 4 = ?", a:["400","450","500","550"], c:2},
+{q:"3 lusin sama dengan …", a:["24","30","36","48"], c:2},
+{q:"5/10 disederhanakan menjadi …", a:["1/10","1/5","1/2","2/5"], c:2},
+{q:"Bangun ruang dengan 6 sisi persegi?", a:["Balok","Kubus","Tabung","Kerucut"], c:1},
+{q:"1 kg = … gram", a:["100","500","1000","2000"], c:2},
+{q:"2 km = … m", a:["200","2000","20","20.000"], c:1},
+{q:"3/4 jam = … menit", a:["30","40","45","60"], c:2},
+{q:"Luas persegi sisi 7 cm adalah …", a:["14","28","42","49"], c:3},
+{q:"Keliling segitiga 5,6,7 cm adalah …", a:["16","17","18","19"], c:2},
+{q:"500 gram = … kg", a:["0,2","0,5","1","5"], c:1},
+
+{q:"Rumus luas persegi panjang adalah …", a:["p+l","2(p+l)","p×l","4s"], c:2},
+{q:"10 × 30 = ?", a:["300","330","30","3.000"], c:0},
+{q:"864 − 279 = ?", a:["575","585","595","605"], c:1},
+{q:"Bangun datar dengan sepasang sisi sejajar?", a:["Persegi","Lingkaran","Segitiga","Trapesium"], c:3},
+{q:"Jumlah sudut persegi panjang adalah …", a:["2","3","4","5"], c:2},
+{q:"Alat ukur waktu adalah …", a:["Penggaris","Jam","Timbangan","Meteran"], c:1},
+{q:"Diagram berbentuk lingkaran disebut …", a:["Garis","Batang","Gambar","Lingkaran"], c:3},
+{q:"20 × 5 = ?", a:["50","80","100","200"], c:2},
+{q:"900 ÷ 9 = ?", a:["90","100","80","70"], c:1},
+{q:"1/2 + 1/2 = …", a:["1/2","1","2","3/2"], c:1}
+];
+
+let i=0, skor=0, hasil=[];
+const box=document.getElementById("quizBox");
+
+function loadQuiz(){
+    box.innerHTML="";
+    if(i<quizData.length){
+        const q=quizData[i];
+        box.innerHTML=`
+        <div class="question">${i+1}. ${q.q}</div>
+        ${q.a.map((o,x)=>`<div class="option" onclick="pilih(this,${x})">${o}</div>`).join("")}`;
+    }else selesai();
+}
+
+function pilih(el,x){
+    const o=document.querySelectorAll(".option");
+    o.forEach(v=>v.style.pointerEvents="none");
+    if(x===quizData[i].c){
+        el.classList.add("correct");
+        document.getElementById("benar").play();
+        skor+=2.5;
+        hasil.push("Benar");
+    }else{
+        el.classList.add("wrong");
+        o[quizData[i].c].classList.add("correct");
+        document.getElementById("salah").play();
+        hasil.push("Salah");
+    }
+    setTimeout(()=>{i++;loadQuiz()},1500);
+}
+
+function selesai(){
+box.innerHTML=`
+<h2>🎉 Kuis Selesai</h2>
+<h3>Skor Akhir: ${skor}</h3>
+
+<div class="answer-key">
+<h3>✅ Kunci Jawaban (Jawaban Benar)</h3>
+${quizData.map((q,index)=>`
+<div>
+${index+1}. 
+<span class="kunci-benar">✔ ${q.a[q.c]}</span>
+<span class="${hasil[index]==='Benar'?'kunci-benar':'kunci-salah'}">
+(${hasil[index]})
+</span>
+</div>
+`).join("")}
+</div>
+
+<button onclick="location.reload()">🔄 Ulangi Kuis</button>
+`;
+}
+
+function fullscreen(){
+    document.documentElement.requestFullscreen();
+}
+
+loadQuiz();
+</script>
+
+</body>
+</html>
